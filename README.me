@@ -1,0 +1,100 @@
+if a class does not have @Component and there is a class that relies on that class for initialization, use a constructor
+
+e.g.:
+
+public class A {
+	public int method(int x, int y) {
+		return x + y;
+	}
+}
+-------------------------------
+public class B {
+	private A a;
+	
+	//Constructor injection
+	
+	public B(A a) {
+		super();
+		this.a = a;
+	}
+}
+
+	
+	
+Or add @Component or @Service to class A then @Autowired to declared var private A a. Use @Service if web app
+
+e.g.:
+
+@Component or @Service
+public class A {
+	public int method(int x, int y) {
+		return x + y;
+	}
+}
+-------------------------------
+public class B {
+	@Autowired
+	private A a;
+}
+
+
+
+
+
+if error says smth like this:
+
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.List.add(Object)" because "com.in28minutes.springboot.myfirstwebapp.todo.TodoService.todos" is null
+	at com.in28minutes.springboot.myfirstwebapp.todo.TodoService.<clinit>(TodoService.java:15) ~[classes/:na]
+	... 45 common frames omitted
+
+that means a variable needs to be initialized to smth
+
+e.g.:
+
+//this would not work
+public class A {
+	private B b;
+}
+
+//this would work bc b is initialized to smth
+public class A {
+	private B b = new B();
+}
+
+//or do constructor injection
+public class A {
+	private B b;
+	
+	public A(B b) {
+		this.b = b;
+	}
+}
+
+//or autowire and service
+public class A {
+	@Autowired
+	private B b;
+}
+
+==========================================================================
+
+command bean - 2-way binding (jsp/view file and controller)
+
+e.g. is on TodoController.java line 36. Whatever is in 3rd param shows up on textbox on browser. That's one binding. 
+The other binding is whatever you put in textbox on browser. Then that goes to the post request handler on line 44.
+
+In a nutshell, from bean to form and form to bean.
+
+==========================================================================
+
+to switch to mysql sh
+mysqlsh --no-name-cache
+to connect to database:
+\connect todos-user@localhost:<port>
+to set todos table as default
+\use todos
+then use sql commands
+\sql
+select * from todo;
+to quit
+Crtl C + D
